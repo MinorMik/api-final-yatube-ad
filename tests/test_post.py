@@ -84,6 +84,49 @@ class TestPostAPI:
             db_post
         )
 
+    @pytest.mark.usefixtures('post', 'post_2', 'another_post')
+    def test_posts_get_paginated(self, user_client):
+        limit = 2
+        offset = 2
+        url = f'{self.post_list_url}?limit={limit}&offset={offset}'
+        response = user_client.get(url)
+        assert response.status_code == 200, (
+            'Убедитесь, что GET-запрос с параметрами `limit` и `offset`, '
+            'отправленный авторизованным пользователем к '
+            f'`{self.post_list_url}`, возвращает ответ со статусом 200.'
+        )
+
+        test_data = response.json()
+
+        # response with pagination must be a dict type
+        assert isinstance(test_data, dict), (
+            'Убедитесь, что GET-запрос с параметрами `limit` и `offset`, '
+            'отправленный авторизованным пользователем к '
+            f'`{self.post_list_url}`, возвращает словарь.'
+        )
+        assert "results" in test_data, (
+            'Убедитесь, что GET-запрос с параметрами `limit` и `offset`, '
+            'отправленный авторизованным пользователем к эндпоинту '
+            f'`{self.post_list_url}`, содержит поле `results` с данными '
+            'постов. Проверьте настройку пагинации для этого эндпоинта.'
+        )
+        assert len(test_data['results']) == Post.objects.count() - offset, (
+            'Убедитесь, что GET-запрос с параметрами `limit` и `offset`, '
+            'отправленный авторизованным пользователем к эндпоинту '
+            f'`{self.post_list_url}`, возвращает корректное количество статей.'
+        )
+
+        db_post = Post.objects.all()[offset:offset + limit][0]
+        test_post = test_data.get('results')[0]
+        self.check_post_data(
+            response_data=test_post,
+            request_method_and_url=(
+                f'GET-запрос к `{self.post_list_url} с указанием параметров '
+                'запроса `limit` и `offset``'
+            ),
+            db_post=db_post
+        )
+
     def test_post_create_auth_with_invalid_data(self, user_client):
         posts_count = Post.objects.count()
         response = user_client.post(self.post_list_url, data={})
