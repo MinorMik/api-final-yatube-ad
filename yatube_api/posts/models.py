@@ -60,6 +60,8 @@ class Comment(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
         default_related_name = "comments"
 
     def __str__(self):
@@ -93,5 +95,5 @@ class Follow(models.Model):
             ),
         ]
 
-        def __str__(self):
-            return self.user
+    def __str__(self):
+        return self.user
