@@ -23,11 +23,17 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name="follow",
-            options={"verbose_name": "Подписчик", "verbose_name_plural": "Подписчики"},
+            options={
+                "verbose_name": "Подписчик",
+                "verbose_name_plural": "Подписчики",
+            },
         ),
         migrations.AlterModelOptions(
             name="group",
-            options={"verbose_name": "Группа", "verbose_name_plural": "Группы"},
+            options={
+                "verbose_name": "Группа",
+                "verbose_name_plural": "Группы",
+            },
         ),
         migrations.AlterModelOptions(
             name="post",
@@ -119,7 +125,10 @@ class Migration(migrations.Migration):
             model_name="post",
             name="image",
             field=models.ImageField(
-                blank=True, null=True, upload_to="posts/", verbose_name="Изображение"
+                blank=True,
+                null=True,
+                upload_to="posts/",
+                verbose_name="Изображение",
             ),
         ),
         migrations.AlterField(
@@ -136,7 +145,9 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="follow",
             constraint=models.CheckConstraint(
-                condition=models.Q(("user", models.F("following")), _negated=True),
+                condition=models.Q(
+                    ("user", models.F("following")), _negated=True
+                ),
                 name="check_self_follow",
             ),
         ),
