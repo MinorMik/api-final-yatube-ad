@@ -1,7 +1,4 @@
 from django.contrib.auth import get_user_model
-
-from posts.models import Group, Post
-
 from rest_framework import filters, mixins, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
@@ -10,6 +7,8 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 
+from posts.models import Group, Post
+
 from .permissions import IsAuthorOrReadOnly
 from .serializers import (
     CommentSerializer,
@@ -17,7 +16,6 @@ from .serializers import (
     GroupSerializer,
     PostSerializer,
 )
-
 
 User = get_user_model()
 
